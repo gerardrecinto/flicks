@@ -76,7 +76,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         // add refresh control to table view
         tableView.insertSubview(refreshControl, at: 0)
         loadDataFromNetwork()
-        
+        //MBProgressHUD.showAdded(to: self.view, animated: true)
+        //MBProgressHUD.hide(for: self.view, animated: true)
         // Do any additional setup after loading the view.
         let apiKey = "FOURSQUARE_CLIENT_SECRET_PLACEHOLDER"
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")!
