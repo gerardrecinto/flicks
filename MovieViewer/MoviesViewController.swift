@@ -11,12 +11,12 @@ import AFNetworking
 import M13ProgressSuite
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController,UISearchBarDelegate, UISearchResultsUpdating, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
-    @IBOutlet weak var search: UISearchBar!
-    let searchController = UISearchController(searchResultsController: nil)
+   // @IBOutlet weak var search: UISearchBar!
+    var searchControl: UISearchController!
 
     var movies: [NSDictionary]?
     let data = ["New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX",
@@ -27,6 +27,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     var filteredData: [String]!
 
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
+                return dataString.range(of: searchText, options: .caseInsensitive) != nil
+                // return dataString.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+            
+            tableView.reloadData()
+        }
+    }
     // Makes a network request to get updated data
     // Updates the tableView with the new data
     // Hides the RefreshControl
@@ -83,14 +94,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
     }
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-       // searchController.searchResultsUpdater = self.search as! UISearchResultsUpdating?
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        tableView.tableHeaderView = searchController.searchBar
-        //searchController.delegate = self.search as! UISearchControllerDelegate?
+       
         tableView.dataSource = self
         tableView.delegate = self
         filteredData = data
@@ -99,15 +105,20 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         // add refresh control to table view
         tableView.insertSubview(refreshControl, at: 0)
         loadDataFromNetwork()
-        //MBProgressHUD.showAdded(to: self.view, animated: true)
-        //MBProgressHUD.hide(for: self.view, animated: true)
+        searchControl = UISearchController(searchResultsController: nil)
+        searchControl.searchResultsUpdater = self
+        searchControl.dimsBackgroundDuringPresentation = false
+        searchControl.searchBar.sizeToFit()
+        tableView.tableHeaderView = searchControl.searchBar
+        definesPresentationContext = true
+        
+        automaticallyAdjustsScrollViewInsets = false
+
         // Do any additional setup after loading the view.
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
         let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-       // if (request.hashValue == 0) {
-        
-        //}
+
         
 
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
@@ -140,20 +151,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         return filteredData.count
 
     }
-    // This method updates filteredData based on the text in the Search Box
-    func search(_ search: UISearchBar, textDidChange searchText: String) {
-        // When there is no text, filteredData is the same as the original data
-        // When user has entered text into the search box
-        // Use the filter method to iterate over all items in the data array
-        // For each item, return true if the item should be included and false if the
-        // item should NOT be included
-        filteredData = searchText.isEmpty ? data : data.filter({(dataString: String) -> Bool in
-            // If dataItem matches the searchText, return true to include it
-            return dataString.range(of: searchText, options: .caseInsensitive) != nil
-        })
-        
-        tableView.reloadData()
-    }
+
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         let movie = movies![indexPath.row]

@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MovieViewer/MoviesViewController.swift"
-            timestampString = "508114154.117363"
+            timestampString = "508144409.33047"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
             landmarkName = "didReceiveMemoryWarning()"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MovieViewer/MoviesViewController.swift"
-            timestampString = "508101404.47051"
+            timestampString = "508142959.603827"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "loadDataFromNetwork()"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MovieViewer/MoviesViewController.swift"
-            timestampString = "508114154.117363"
+            timestampString = "508142959.603827"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
+            startingLineNumber = "91"
+            endingLineNumber = "91"
             landmarkName = "loadDataFromNetwork()"
             landmarkType = "7">
             <Locations>
@@ -58,11 +58,11 @@
                   moduleName = "MovieViewer"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/gerardrecinto/Desktop/MovieViewer/MovieViewer/MoviesViewController.swift"
-                  timestampString = "508121283.027378"
+                  timestampString = "508144999.03336"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
                   offsetFromSymbolStart = "759">
                </Location>
                <Location
@@ -73,11 +73,11 @@
                   moduleName = "MovieViewer"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/gerardrecinto/Desktop/MovieViewer/MovieViewer/MoviesViewController.swift"
-                  timestampString = "508121283.028587"
+                  timestampString = "508144999.037643"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "82"
-                  endingLineNumber = "82"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
                   offsetFromSymbolStart = "708">
                </Location>
             </Locations>
@@ -90,12 +90,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MovieViewer/MoviesViewController.swift"
-            timestampString = "508121282.982513"
+            timestampString = "508142959.603827"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
             landmarkName = "loadDataFromNetwork()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieViewer/MoviesViewController.swift"
+            timestampString = "508143952.958193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieViewer/MoviesViewController.swift"
+            timestampString = "508143952.958193"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
