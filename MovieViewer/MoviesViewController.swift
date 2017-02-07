@@ -86,11 +86,11 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchController.searchResultsUpdater = self.search as! UISearchResultsUpdating?
+       // searchController.searchResultsUpdater = self.search as! UISearchResultsUpdating?
         searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
-        searchController.delegate = self.search as! UISearchControllerDelegate?
+        //searchController.delegate = self.search as! UISearchControllerDelegate?
         tableView.dataSource = self
         tableView.delegate = self
         filteredData = data
