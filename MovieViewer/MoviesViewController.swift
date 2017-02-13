@@ -166,12 +166,15 @@ class MoviesViewController: UIViewController,UISearchBarDelegate, UITableViewDat
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         let baseUrl = "https://image.tmdb.org/t/p/w500"
+        
         if let posterPath = movie["poster_path"] as? String{
 
         let imageUrl = URL(string: baseUrl + posterPath)
+           
         cell.posterView.setImageWith(imageUrl!)
         }
-        cell.titleLabel.text = title
+        
+               cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         cell.backgroundColor = UIColor.brown
 //        cell.textLabel?.text = filteredData[indexPath.row]
