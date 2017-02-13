@@ -38,6 +38,22 @@ class DetailViewController: UIViewController {
             let largeImageUrl = URL(string: "https://image.tmdb.org/t/p/original" + posterPath)
             let smallImageRequest = NSURLRequest(url: smallImageUrl!)
             let largeImageRequest = NSURLRequest(url: largeImageUrl!)
+            self.navigationItem.title = "Movies"
+            if let navigationBar = navigationController?.navigationBar {
+                //  navigationBar.setBackgroundImage(UIImage(named: "star"), for: .default)
+                let shadow = NSShadow()
+                shadow.shadowColor = UIColor.gray.withAlphaComponent(0.5)
+                shadow.shadowOffset = CGSize(width: 2, height: 2)
+                // shadow.shadowOffset = CGSizeMake(2, 2);
+                shadow.shadowBlurRadius = 4;
+                navigationBar.titleTextAttributes = [
+                    NSFontAttributeName : UIFont.boldSystemFont(ofSize: 22),
+                    NSForegroundColorAttributeName : UIColor(red: 0.5, green: 0.15, blue: 0.15, alpha: 0.8),
+                    NSShadowAttributeName : shadow
+                ]
+            }
+            
+
             
             self.posterImageView.setImageWith(
                 smallImageRequest as URLRequest,
