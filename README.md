@@ -20,7 +20,7 @@ The following **optional** features are implemented:
 - [ ] Movies are displayed using a CollectionView instead of a TableView.
 - [ X ] User can search for a movie.
 - [ ] All images fade in as they are loading.
-- [ X ] Customize the UI. (What I did: Listed each movie according to their location)
+- [ X ] Customize the UI. (Brown movie cells)
 
 The following **additional** features are implemented:
 
@@ -77,13 +77,12 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-- [ ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
+- [x ] For the large poster, load the low resolution image first and then switch to the high resolution image when complete.
 - [ ] Customize the navigation bar.
 
 The following **additional** features are implemented:
 
-- [x ] List anything else that you can get done to improve the app functionality!
-- changed color of each movie cell to brown 
+- [ ] List anything else that you can get done to improve the app functionality!
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
@@ -94,7 +93,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://imgur.com/2cgBMi3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
