@@ -1,6 +1,9 @@
 # flicks
 # Project 1 - *Flicks*
 
+![Image](http://imgur.com/GHNdIQL.gif)
+
+
 **Flicks** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
 Time spent: **16** hours spent in total
