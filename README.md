@@ -1,7 +1,7 @@
 # flicks
 # Project 1 - *Flicks*
 
-![Image](http://imgur.com/GHNdIQL.gif)
+![Image](https://imgur.com/a/K5bcZv1.gif)
 
 
 **Flicks** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
