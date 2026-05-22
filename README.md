@@ -5,15 +5,16 @@
 ![UIKit](https://img.shields.io/badge/UIKit-Auto%20Layout-blue)
 ![TMDb](https://img.shields.io/badge/API-TMDb-01B4E4)
 
-An iOS movie browser built with Swift and UIKit, powered by The Movie Database (TMDb) API.
+![Demo](docs/assets/demo2.gif)
+
+iOS movie browser built with Swift and UIKit, powered by The Movie Database (TMDb) API.
 
 ## Features
 
 - Now Playing and Top Rated movie lists via tab bar navigation
-- Movie detail view with progressive image loading (low-res placeholder → full resolution)
+- Movie detail view with progressive image loading (low-res placeholder to full resolution)
 - Search across movie titles
 - Pull-to-refresh and loading state indicators
-- Network error handling with user-facing messages
 - Smooth image fade-in on load
 
 ## Tech Stack
@@ -28,14 +29,10 @@ An iOS movie browser built with Swift and UIKit, powered by The Movie Database (
 ## Setup
 
 ```bash
-git clone https://github.com/gerardrecinto/flicks.git
-cd flicks
+git clone https://github.com/gerardrecinto/flicks-ios.git
+cd flicks-ios
 pod install
 open MovieViewer.xcworkspace
 ```
 
-Add your TMDb API key to the project before building.
-
-## Demo
-
-![Demo](https://imgur.com/a/K5bcZv1.gif)
+Add your TMDb API key before building.
