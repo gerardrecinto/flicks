@@ -7,219 +7,103 @@
 //
 
 import UIKit
-import AFNetworking
-import M13ProgressSuite
-import MBProgressHUD
 
-class MoviesViewController: UIViewController,UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
-    
+@MainActor
+class MoviesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var errorLabel: UILabel!
 
-    lazy var searchBar = UISearchBar()
-    
-    var movies: [NSDictionary]?
-    
-    var filteredData:[NSDictionary]?
-    var endpoint = String()
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.filteredData = searchText.isEmpty ? movies : movies?.filter({ (movie) -> Bool in
-            (movie.value(forKey: "title") as! String).range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-        })
-        self.tableView.reloadData()
-        
-    }
-    
-    // Makes a network request to get updated data
-    // Updates the tableView with the new data
-    // Hides the RefreshControl
-    func refreshControlAction(_ refreshControl: UIRefreshControl) {
-        
-        // ... Create the URLRequest `myRequest` ...
-        let apiKey = "FOURSQUARE_CLIENT_SECRET_PLACEHOLDER"
-        let url = URL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")!
-        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        // Configure session so that completion handler is executed on main UI thread
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-        let task: URLSessionDataTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            
-            // ... Use the new data to update the data source ...
-            
-            // Reload the tableView now that there is new data
-            self.tableView.reloadData()
-            
-            // Tell the refreshControl to stop spinning
-            refreshControl.endRefreshing()
-        }
-        task.resume()
-    }
-    func loadDataFromNetwork() {
-        
-        // ... Create the NSURLRequest (myRequest) ...
-        let myRequest = NSURLRequest()
-        // Configure session so that completion handler is executed on main UI thread
-        let session = URLSession(
-            configuration: URLSessionConfiguration.default,
-            delegate:nil,
-            delegateQueue:OperationQueue.main
-        )
-        
-        // Display HUD right before the request is made
-        MBProgressHUD.showAdded(to: self.view, animated: true)
-        
-        let task : URLSessionDataTask = session.dataTask(with: myRequest as URLRequest,
-                                                                      completionHandler: { (data, response, error) in
-                                                                        
-                                                                        // Hide HUD once the network request comes back (must be done on main UI thread)
-                                                                        MBProgressHUD.hide(for: self.view, animated: true)
-                                                                        
-                                                                        // ... Remainder of response handling code ...
-                                                                        if (error != nil){
-                                                                            self.errorLabel.isHidden = false
-                                                                        } else {
-                                                                            self.errorLabel.isHidden = true
-                                                                        }
-                                                                        
-                                                                        
-                                                                        
-        });
-        task.resume()
+    private lazy var searchBar = UISearchBar()
+    private var movies: [[String: Any]] = []
+    private var filteredMovies: [[String: Any]] = []
+    var endpoint = "now_playing"
+
+    private let apiKey = "FOURSQUARE_CLIENT_SECRET_PLACEHOLDER"
+    private let baseURL = "https://api.themoviedb.org/3/movie/"
+
+    private var isSearching: Bool {
+        !(searchBar.text?.isEmpty ?? true)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.dataSource = self
         tableView.delegate = self
-        
-        self.searchBar.delegate = self
-    
-        
+        tableView.rowHeight = 120
+        searchBar.delegate = self
+        navigationItem.titleView = searchBar
+
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
-        // add refresh control to table view
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: .valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
-        loadDataFromNetwork()
 
-        
-        self.navigationItem.titleView  = searchBar
-        
-        
-        definesPresentationContext = true
-        
-        automaticallyAdjustsScrollViewInsets = false
+        fetchMovies()
+    }
 
-        // Do any additional setup after loading the view.
-        let apiKey = "FOURSQUARE_CLIENT_SECRET_PLACEHOLDER"
-        let url = URL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
-        let request = URLRequest(url: url! , cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
-        
-        
+    @objc private func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        Task {
+            await fetchMoviesAsync()
+            refreshControl.endRefreshing()
+        }
+    }
 
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-        
-        let task: URLSessionDataTask = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
+    private func fetchMovies() {
+        Task { await fetchMoviesAsync() }
+    }
 
-            if let data = data {
-                if let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                    print(dataDictionary)
-                    self.movies = dataDictionary["results"]
-                        as! [NSDictionary]
-             
-                    self.tableView.reloadData()
-                }
+    private func fetchMoviesAsync() async {
+        guard let url = URL(string: "\(baseURL)\(endpoint)?api_key=\(apiKey)") else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let results = json["results"] as? [[String: Any]] else {
+                errorLabel.isHidden = false
+                return
             }
+            movies = results
+            filteredMovies = results
+            errorLabel.isHidden = true
+            tableView.reloadData()
+        } catch {
+            errorLabel.isHidden = false
         }
-        
-        task.resume()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    // MARK: - UISearchBarDelegate
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-       
-        
-        if self.searchBar.text!.isEmpty{
-            return self.movies?.count ?? 0
-        }else{
-            return self.filteredData?.count ?? 0
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredMovies = searchText.isEmpty ? movies : movies.filter {
+            ($0["title"] as? String ?? "").localizedCaseInsensitiveContains(searchText)
         }
-        
-        
-        
-//        if let movies = movies {
-//            return movies.count
-//        } else {
-//            return 0
-//        }
-//        return filteredData!.count
-
+        tableView.reloadData()
     }
 
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    // MARK: - UITableViewDataSource
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        isSearching ? filteredMovies.count : movies.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        let movie =  self.searchBar.text!.isEmpty ?  movies![indexPath.row] : filteredData![indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let baseUrl = "https://image.tmdb.org/t/p/w500"
-        
-        if let posterPath = movie["poster_path"] as? String{
-
-        let imageUrl = URL(string: baseUrl + posterPath)
-            let imageRequest = NSURLRequest(url: imageUrl!)
-            let imageResponse = URLResponse()
-            let image = cell.posterView.image
-            cell.posterView.setImageWith(imageRequest as URLRequest, placeholderImage: nil, success: {(imageRequest, imageResponse, image) -> Void in
-                //imageResponse will be nil if the image is cached
-                if imageResponse != nil {
-                    cell.posterView.alpha = 0.0
-                    cell.posterView.image = image
-                    UIView.animate(withDuration: 0.3, animations: { () -> Void in
-                        cell.posterView.alpha = 1.0
-                    })
-                } else {
-                    print("Image was cached so just update the image")
-                    cell.posterView.image = image
-                }
-                
-                
-            }, failure: {(imageRequest, imageResponse, error) -> Void in
-                print("error")
-            })
-
-        cell.posterView.setImageWith(imageUrl!)
+        let movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
+        cell.titleLabel.text = movie["title"] as? String
+        cell.overviewLabel.text = movie["overview"] as? String
+        if let posterPath = movie["poster_path"] as? String,
+           let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") {
+            cell.posterView.loadImage(from: url)
         }
-        
-               cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.backgroundColor = UIColor.brown
-//        cell.textLabel?.text = filteredData[indexPath.row]
-
         return cell
     }
 
-    
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)
-        let movie = movies?[(indexPath?.row)!]
-        let detailViewController = segue.destination as! DetailViewController
-        detailViewController.movie = movie
-        cell.selectionStyle = .gray
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.red
-        cell.selectedBackgroundView = backgroundView
-
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        guard let cell = sender as? UITableViewCell,
+              let indexPath = tableView.indexPath(for: cell) else { return }
+        let movie = isSearching ? filteredMovies[indexPath.row] : movies[indexPath.row]
+        let detailVC = segue.destination as! DetailViewController
+        detailVC.movie = movie
     }
-    
-
 }
