@@ -19,7 +19,7 @@ class MoviesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     private var filteredMovies: [[String: Any]] = []
     var endpoint = "now_playing"
 
-    private let apiKey = "FOURSQUARE_CLIENT_SECRET_PLACEHOLDER"
+    private let apiKey = ProcessInfo.processInfo.environment["TMDB_API_KEY"] ?? ""
     private let baseURL = "https://api.themoviedb.org/3/movie/"
 
     private var isSearching: Bool {
@@ -53,7 +53,8 @@ class MoviesViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     }
 
     private func fetchMoviesAsync() async {
-        guard let url = URL(string: "\(baseURL)\(endpoint)?api_key=\(apiKey)") else { return }
+        guard !apiKey.isEmpty,
+              let url = URL(string: "\(baseURL)\(endpoint)?api_key=\(apiKey)") else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
